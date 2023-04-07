@@ -36,7 +36,7 @@ namespace GradeBook
 
         public void AddGrade(double grade)
         {
-            if (grade < 0 || grade > 100)
+            if (grade < 0 || grade > 100)//todo: here set && probably
                 throw new ArgumentException("Grades must be between 0 and 100.");
             Grades.Add(grade);
         }
