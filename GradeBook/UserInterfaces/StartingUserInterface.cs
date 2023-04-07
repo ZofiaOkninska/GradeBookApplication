@@ -1,4 +1,5 @@
 ﻿using GradeBook.GradeBooks;
+using Newtonsoft.Json;
 using System;
 
 namespace GradeBook.UserInterfaces
@@ -36,33 +37,33 @@ namespace GradeBook.UserInterfaces
             var parts = command.Split(' ');
             if (parts.Length != 4)
             {
-                Console.WriteLine("Command not valid, Create requires a name and type of gradebook, if it's weighted (true / false).");
+                Console.WriteLine("Command not valid, Create requires a name, type of gradebook, if it's weighted (true / false).");
                 return;
-            }
-
+            } 
             var name = parts[1];
-            var type = parts[2];
-            bool isWeighted = parts[3] == "true" ? true : false;
 
-            if (parts[3] != "true" || parts[3] != "false")
+            if (parts[2] == "standard" && parts[3] == "true")
             {
-                Console.WriteLine("Last argument must be true / false");
-                return;
-            }
-
-            if (type == "standard")
-            {
-                StandardGradeBook gradeBook = new StandardGradeBook(name, isWeighted);
+                StandardGradeBook gradeBook = new StandardGradeBook(name, true);
                 GradeBookUserInterface.CommandLoop(gradeBook);
-                Console.WriteLine("Created gradebook {0}.", name);
             }
-            else if (type == "ranked")
+            else if (parts[2] == "ranked" && parts[3] == "true")
             {
-                RankedGradeBook gradeBook = new RankedGradeBook(name, isWeighted);
+                RankedGradeBook gradeBook = new RankedGradeBook(name, true);
                 GradeBookUserInterface.CommandLoop(gradeBook);
-                Console.WriteLine("Created gradebook {0}.", name);
             }
-            else Console.WriteLine("{0} is not a supported type of gradebook, please try again", type);
+            if (parts[2] == "standard" && parts[3] == "false")
+            {
+                StandardGradeBook gradeBook = new StandardGradeBook(name, false);
+                GradeBookUserInterface.CommandLoop(gradeBook);
+            }
+            else if (parts[2] == "ranked" && parts[3] == "false")
+            {
+                RankedGradeBook gradeBook = new RankedGradeBook(name, false);
+                GradeBookUserInterface.CommandLoop(gradeBook);
+            }
+            else Console.WriteLine("{0} is not a supported parts[2] of gradebook, please try again", parts[2]);
+            Console.WriteLine("Created gradebook {0}.", name);
         }
 
         public static void LoadCommand(string command)
@@ -87,7 +88,7 @@ namespace GradeBook.UserInterfaces
             Console.WriteLine();
             Console.WriteLine("GradeBook accepts the following commands:");
             Console.WriteLine();
-            Console.WriteLine("Create 'Name' 'Type' - Creates a new gradebook where 'Name' is the name of the gradebook and 'Type' is what type of grading it should use.");
+            Console.WriteLine("Create 'Name' 'Type' 'Weighted' - Creates a new gradebook where 'Name' is the name of the gradebook, 'Type' is what type of grading it should use, and 'Weighted' is whether or not grades should be weighted (true or false).");
             Console.WriteLine();
             Console.WriteLine("Load 'Name' - Loads the gradebook with the provided 'Name'.");
             Console.WriteLine();
